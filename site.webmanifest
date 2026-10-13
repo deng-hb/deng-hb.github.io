@@ -1,0 +1,14 @@
+{
+  "name": "denghb · 灵感实验室",
+  "short_name": "denghb",
+  "description": "一个注重细节与动效的个人主页 —— 慢一点，让光追上来。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05060f",
+  "theme_color": "#05060f",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
