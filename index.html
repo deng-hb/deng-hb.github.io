@@ -4,11 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>denghb · 灵感实验室 — 慢一点，让光追上来</title>
-<meta name="description" content="denghb 的个人主页：开屏动画、粒子星座背景与一篇关于耐心的随笔。零依赖，纯手写 HTML / CSS / JS。">
+<meta name="description" content="denghb 的个人主页与开源项目：开屏动画、粒子星座背景、一篇关于耐心的随笔，以及 EORM、E-R.Design、jpa-spec-chain、running-line、Tilde Secret。零依赖，纯手写 HTML / CSS / JS。">
 <meta name="keywords" content="denghb, 个人主页, 前端, 交互动效, 网页设计, Canvas 粒子">
 <meta name="author" content="denghb">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://denghb.com/">
+<link rel="alternate" hreflang="zh-CN" href="https://denghb.com/">
+<link rel="alternate" hreflang="en" href="https://denghb.com/index.en.html">
 <meta name="theme-color" content="#05060f">
 <meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
@@ -49,7 +51,7 @@
     --line:rgba(255,255,255,.10);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{
     background:var(--bg);
     color:var(--ink);
@@ -151,6 +153,17 @@
   .links a:hover{color:#fff}
   .links a:hover::after{width:100%}
   @media(max-width:640px){.links{display:none}}
+  .nav-right{display:flex;align-items:center;gap:22px}
+  .lang{
+    flex:none;position:relative;padding:4px 0;font-size:13px;letter-spacing:2px;
+    color:var(--dim);text-decoration:none;transition:color .25s
+  }
+  .lang::after{
+    content:"";position:absolute;left:0;bottom:0;height:2px;width:0;
+    background:linear-gradient(90deg,var(--c1),var(--c2));transition:width .3s
+  }
+  .lang:hover{color:#fff}
+  .lang:hover::after{width:100%}
 
   /* ---------- 主视觉 ---------- */
   header{
@@ -158,10 +171,12 @@
     display:grid;place-items:center;text-align:center;
     padding:120px 20px 80px;
   }
+  header>div{width:100%}
   .badge{
     display:inline-flex;align-items:center;gap:8px;
-    padding:7px 16px;border:1px solid var(--line);border-radius:999px;
-    font-size:12px;letter-spacing:3px;color:var(--dim);
+    max-width:calc(100vw - 40px);white-space:nowrap;
+    padding:7px clamp(10px,3vw,16px);border:1px solid var(--line);border-radius:999px;
+    font-size:clamp(10px,2.6vw,12px);letter-spacing:clamp(1.5px,.55vw,3px);color:var(--dim);
     background:var(--glass);text-transform:uppercase;
     animation:rise .9s .1s both cubic-bezier(.2,.8,.2,1)
   }
@@ -170,8 +185,8 @@
   @keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
 
   .glitch{
-    position:relative;display:inline-block;
-    font-size:clamp(52px,13vw,168px);line-height:.95;font-weight:900;
+    position:relative;display:inline-block;max-width:100%;white-space:nowrap;
+    font-size:clamp(32px,12vw,168px);line-height:.95;font-weight:900;
     letter-spacing:-2px;margin:26px 0 6px;
     text-shadow:0 0 40px rgba(124,92,255,.45);
     animation:rise .9s .2s both cubic-bezier(.2,.8,.2,1);
@@ -253,11 +268,31 @@
   .card:hover{border-color:rgba(0,240,255,.45)}
   .card:hover::after{opacity:1}
   .card .ico{
-    width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
-    font-size:24px;margin-bottom:20px;
+    position:relative;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+    margin-bottom:20px;overflow:hidden;
     background:linear-gradient(135deg,rgba(0,240,255,.2),rgba(255,47,185,.2));
     border:1px solid var(--line);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s;
   }
+  .card .ico::before{
+    content:"";position:absolute;inset:-60%;opacity:0;transition:opacity .4s;
+    background:conic-gradient(from 0deg,transparent 0 48%,
+              rgba(0,240,255,.45),rgba(124,92,255,.45),rgba(255,47,185,.45),transparent 82%);
+    animation:spin 6s linear infinite;
+  }
+  .card .ico svg{
+    position:relative;z-index:1;width:27px;height:27px;
+    fill:none;stroke:url(#icoGrad);stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(0,240,255,.35));
+    transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .card:hover .ico{
+    transform:translateY(-4px);border-color:rgba(0,240,255,.5);
+    box-shadow:0 12px 32px rgba(0,240,255,.18);
+  }
+  .card:hover .ico::before{opacity:1}
+  .card:hover .ico svg{transform:scale(1.08) rotate(-5deg)}
   .card h3{font-size:20px;margin-bottom:10px;letter-spacing:.5px}
   .card p{color:var(--dim);font-size:14.5px;line-height:1.85}
   .card .num{position:absolute;top:18px;right:22px;font-size:13px;color:rgba(255,255,255,.22);
@@ -308,6 +343,8 @@
     animation:spin 7s linear infinite;opacity:.75
   }
   .box h2{font-size:clamp(28px,5vw,48px);font-weight:900;margin-bottom:16px}
+  .box h2 .grad{background:linear-gradient(90deg,var(--c1),var(--c2));
+                -webkit-background-clip:text;background-clip:text;color:transparent}
   .box p{color:var(--dim);line-height:1.9;max-width:560px;margin:0 auto 30px}
 
   footer{position:relative;z-index:5;padding:40px 24px 46px;text-align:center;
@@ -418,6 +455,16 @@
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="icoGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00f0ff"/>
+      <stop offset=".55" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#ff2fb9"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <div id="splash" aria-hidden="true">
   <div class="splash-in">
     <div class="splash-name">
@@ -452,11 +499,14 @@
     </svg>
     <span class="word" aria-label="denghb"><span class="d">D</span><span style="--i:0">E</span><span style="--i:1">N</span><span style="--i:2">G</span><span style="--i:3">H</span><span style="--i:4">B</span></span>
   </a>
-  <div class="links">
-    <a href="#work">探索</a>
-    <a href="#essay">随笔</a>
-    <a href="#journey">历程</a>
-    <a href="#contact">尾声</a>
+  <div class="nav-right">
+    <div class="links">
+      <a href="#work">项目</a>
+      <a href="#essay">随笔</a>
+      <a href="#journey">历程</a>
+      <a href="#contact">尾声</a>
+    </div>
+    <a class="lang" href="./index.en.html" hreflang="en" aria-label="Switch to English">EN</a>
   </div>
 </nav>
 <div id="prog"></div>
@@ -488,38 +538,74 @@
 
 <section id="work">
   <div class="head reveal">
-    <div class="kicker">What I Do</div>
-    <h2 class="title">用代码与设计，<em>制造惊喜</em></h2>
-    <p class="sub">从一个简单的 Hello World 开始，把想象变成可交互的、会呼吸的界面。</p>
+    <div class="kicker">Open Source</div>
+    <h2 class="title">写过的<em>开源项目</em></h2>
+    <p class="sub">从一个简单的 Hello World 开始，把想象变成可交互的、会呼吸的界面。下面这些，是在 Java 与 Spring Boot 之上反复打磨的开源作品。</p>
   </div>
 
   <div class="cards">
     <article class="card reveal tilt">
       <div class="num">01</div>
-      <div class="ico">✦</div>
-      <h3>视觉特效</h3>
-      <p>Canvas 粒子网络、故障艺术、渐变光晕与微交互，让每一次滚动都有反馈。</p>
+      <div class="ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <ellipse cx="12" cy="5.5" rx="7" ry="2.6"/>
+          <path d="M5 5.5v6c0 1.44 3.13 2.6 7 2.6s7-1.16 7-2.6v-6"/>
+          <path d="M5 11.5v6c0 1.44 3.13 2.6 7 2.6s7-1.16 7-2.6v-6"/>
+        </svg>
+      </div>
+      <h3>EORM</h3>
+      <p>把 SQL 的控制权留在手里。三个注解起步的轻量持久层，拉姆达表达式让查询在编译期站稳；每一次执行都经过审查，透明、克制，也足够锋利。</p>
     </article>
     <article class="card reveal tilt">
       <div class="num">02</div>
-      <div class="ico">⌘</div>
-      <h3>前端工程</h3>
-      <p>零依赖、单文件、极致性能。语义化结构与响应式布局，移动端同样丝滑。</p>
+      <div class="ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="7" height="6" rx="1.4"/>
+          <rect x="14" y="14" width="7" height="6" rx="1.4"/>
+          <path d="M10 7h2.6a2 2 0 0 1 2 2v3"/>
+          <circle cx="14.6" cy="12" r="1.2"/>
+        </svg>
+      </div>
+      <h3>E-R.Design</h3>
+      <p>让数据模型拥有版本与秩序。多版本 ER 建模、可视化结构编辑、一键生成迁移 DDL；从既有数据源反推模型，权限细到每一张表，协作有据可循。</p>
     </article>
     <article class="card reveal tilt">
       <div class="num">03</div>
-      <div class="ico">◆</div>
-      <h3>交互动效</h3>
-      <p>自定义光标、磁吸按钮、3D 卡片倾斜，用细节堆叠出高级的质感。</p>
+      <div class="ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9.4 14.6l5.2-5.2"/>
+          <path d="M8.2 17.8l-1.3 1.3a3.1 3.1 0 0 1-4.4-4.4l3.1-3.1a3.1 3.1 0 0 1 4.4 0"/>
+          <path d="M15.8 6.2l1.3-1.3a3.1 3.1 0 0 1 4.4 4.4l-3.1 3.1a3.1 3.1 0 0 1-4.4 0"/>
+        </svg>
+      </div>
+      <h3>jpa-spec-chain</h3>
+      <p>用方法引用书写 JPA 查询。类型安全的关联、投影与聚合，join 自动复用，分页与 count 一并接管；需要时，它依然是那个原生 Specification。</p>
+    </article>
+    <article class="card reveal tilt">
+      <div class="num">04</div>
+      <div class="ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2 13h4l2.4-6 4.2 10 2.4-4H22"/>
+          <circle cx="18.6" cy="13" r="1.3"/>
+        </svg>
+      </div>
+      <h3>running-line</h3>
+      <p>看见代码真正跑过的痕迹。Agent 在类加载时植入行探针，记录每次执行与耗时；控制台按 commit 还原源码、逐行标色，未覆盖的改动在分支对比下无处藏身。</p>
+    </article>
+    <article class="card reveal tilt">
+      <div class="num">05</div>
+      <div class="ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2.8l7 2.5v6.2c0 4.3-2.9 8-7 9.7-4.1-1.7-7-5.4-7-9.7V5.3z"/>
+          <circle cx="12" cy="10.6" r="1.9"/>
+          <path d="M12 12.5v3.1"/>
+        </svg>
+      </div>
+      <h3>Tilde Secret</h3>
+      <p>为接口加一层安静的守护。请求以一次性密钥加密、响应由签名背书，协商交给 Filter 静默完成；业务代码无需改动，却已被妥善保护。</p>
     </article>
   </div>
 
-  <div class="stats">
-    <div class="stat reveal"><b class="count" data-to="60">0</b><span>FPS 动画</span></div>
-    <div class="stat reveal"><b class="count" data-to="0">0</b><span>外部依赖</span></div>
-    <div class="stat reveal"><b class="count" data-to="100">0</b><span>响应式 %</span></div>
-    <div class="stat reveal"><b class="count" data-to="24">0</b><span>小时在线</span></div>
-  </div>
 </section>
 
 <section id="essay">
